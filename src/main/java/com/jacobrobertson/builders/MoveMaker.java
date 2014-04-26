@@ -16,16 +16,17 @@ public class MoveMaker implements Moves {
 	private List<Rule> defaultRules = new ArrayList<Rule>();
 	private BuilderMapImpl map;
 	private List<Builder> builders = new ArrayList<Builder>();
-	private int msBetweenTurns = 250;
+	private int msBetweenTurns;
 	private boolean running = false;
 	private MapDrawer drawer;
 	private int turnsTaken = 0;
 	
-	public MoveMaker(BuilderMapImpl map, MapDrawer drawer, List<Builder> builders) {
+	public MoveMaker(BuilderMapImpl map, MapDrawer drawer, List<Builder> builders, int msBetweenTurns) {
 		this.builders = builders;
 		this.map = map;
 		this.drawer = drawer;
 		this.defaultRules = getDefaultRules();
+		this.msBetweenTurns = msBetweenTurns;
 	}
 	public void start() {
 		drawer.drawMap(map);
@@ -121,9 +122,13 @@ public class MoveMaker implements Moves {
 		}
 		
 		// can't walk if there's nothing under us
+		// - unless we can climb
 		Point d = getPoint(p, Direction.Down);
 		if (isEmpty(d)) {
-			return false;
+			Block b = map.getBlock(n);
+			if (b != null && !b.getBehavior().isClimbable()) {
+				return false;
+			}
 		}
 		
 		// determine if we can walk there or not...
