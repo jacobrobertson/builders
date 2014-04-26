@@ -41,6 +41,9 @@ public class Move {
 	public static Move climb() {
 		return new Move(MoveType.Walk, Direction.Up, null);
 	}
+	public static Move climbDown() {
+		return new Move(MoveType.Walk, Direction.Down, null);
+	}
 	public static Move mine(Direction direction) {
 		return new Move(MoveType.Mine, direction, null);
 	}

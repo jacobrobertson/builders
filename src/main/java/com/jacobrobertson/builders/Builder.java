@@ -14,7 +14,7 @@ public class Builder {
 	}
 	public Builder(String name, List<Rule> rules) {
 		this.name = name;
-		this.backpack = new Backpack();
+		this.backpack = new BackpackImpl();
 		this.rules = rules;
 	}
 	public String getName() {

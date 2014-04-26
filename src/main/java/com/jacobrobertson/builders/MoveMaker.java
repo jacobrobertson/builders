@@ -85,29 +85,44 @@ public class MoveMaker implements Moves {
 		return false;
 	}
 	private boolean mine(Move move, Builder builder) {
-		return false;
+		Point b = map.getBuilderPosition(builder);
+		Point m = getPoint(b, move.getDirection());
+		Block block = map.getBlock(m);
+		if (block != null && block.getBehavior().isMineable()) {
+			map.removeBlock(m);
+			((BackpackImpl) builder.getBackpack()).add(block);
+			return true;
+		} else {
+			return false;
+		}
 	}
-	private boolean fall(String builder) {
-		// TODO we are assuming we've actually already vetted this out
+	private boolean down(String builder) {
 		Point p = map.getBuilderPosition(builder);
 		Point d = getPoint(p, Direction.Down);
-		map.setBuilderPosition(builder, d);
-		return true;
+		
+		if (isEmpty(d) || isClimbable(d)) {
+			map.setBuilderPosition(builder, d);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	private boolean climb(String builder) {
 		Point p = map.getBuilderPosition(builder);
 		Block b = map.getBlock(p);
 		if (b != null && b.getBehavior().isClimbable()) {
 			Point u = getPoint(p, Direction.Up);
-			map.setBuilderPosition(builder, u);
-			return true;
+			if (isClimbable(u) || isEmpty(u)) {
+				map.setBuilderPosition(builder, u);
+				return true;
+			}
 		}
 		return false;
 	}
 	private boolean walk(Move move, String builder) {
 		
 		if (move.getDirection() == Direction.Down) {
-			return fall(builder);
+			return down(builder);
 		}
 		if (move.getDirection() == Direction.Up) {
 			return climb(builder);
@@ -163,12 +178,31 @@ public class MoveMaker implements Moves {
 		return false;
 	}
 	public boolean isEmpty(Point p) {
+		if (isOutOfBounds(p)) {
+			return false;
+		}
 		Block bd = map.getBlock(p);
 		if (bd == null) {
 			return true;
 		}
 		 
 		return (bd.getType() == null);
+	}
+	public boolean isClimbable(Point p) {
+		Block bd = map.getBlock(p);
+		if (bd == null) {
+			return false;
+		}
+		 
+		return (bd.getBehavior().isClimbable());
+	}
+	public boolean isMineable(Point p) {
+		Block bd = map.getBlock(p);
+		if (bd == null) {
+			return false;
+		}
+		 
+		return (bd.getBehavior().isMineable());
 	}
 	/**
 	 * TODO - we don't know if it's "stairs" unless we know a little more context - what direction are you coming from
@@ -218,6 +252,34 @@ public class MoveMaker implements Moves {
 		return false;
 	}
 	private boolean place(Move move, Builder builder) {
+		Point b = map.getBuilderPosition(builder);
+		Point m = getPoint(b, move.getDirection());
+		if (!isPlaceable(m)) {
+			return false;
+		}
+
+		Block remove = ((BackpackImpl) builder.getBackpack()).remove(move.getBlockType());
+		if (remove != null) {
+			map.setSimpleMapData(remove, m.x, m.y);
+			return true;
+		}
+		
+		return false;
+	}
+	public boolean isPlaceable(Point m) {
+		if (!isEmpty(m)) {
+			return false;
+		}
+
+		// see if there is at least one spot around the block that isn't empty, and is attachable
+		for (Direction d: Direction.values()) {
+			Point test = getPoint(m, d);
+			Block block = map.getBlock(test);
+			if (block != null && block.getBehavior().isAttachable()) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	public Point getPoint(Point p, Direction d) {

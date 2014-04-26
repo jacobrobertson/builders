@@ -29,6 +29,9 @@ public class BuilderMapImpl implements BuilderMap {
 	public Point getBuilderPosition(MoveContext context) {
 		return getBuilderPosition(context.getBuilder().getName());
 	}
+	public Point getBuilderPosition(Builder builder) {
+		return getBuilderPosition(builder.getName());
+	}
 	public Point getBuilderPosition(String name) {
 		Point p = builders.get(name);
 		return new Point(p.x, p.y);
@@ -62,6 +65,10 @@ public class BuilderMapImpl implements BuilderMap {
 			initSize();
 		}
 		return height;
+	}
+	public Block removeBlock(Point p) {
+		MapData md = map.get(p.x).remove(p.y);
+		return md.getBlock();
 	}
 	public Block getBlock(Point p) {
 		return getBlock(p.x, p.y);

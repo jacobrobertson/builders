@@ -1,12 +1,9 @@
 
-
-
-
-  X*X
-   X *          *
-     *       X  *
-     *      *  X
-     ***    * X
-       *XX  *   1
-********************
-XXXXXXXXXXXXXXXXXXXX
+ XX*X
+   * *          *
+   X *       X  *
+    X*      *  X
+ X XX*X*    * X
+ X X  XXXX  *   1
+**X***X***X**X******
+XXXXXXX***XXXXXXXXXX

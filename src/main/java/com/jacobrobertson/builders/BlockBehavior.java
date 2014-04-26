@@ -9,13 +9,16 @@ public class BlockBehavior {
 	private boolean mineable;
 	private boolean climbable;
 	private boolean stairway;
+	private boolean attachable;
+	
 	public BlockBehavior(boolean canStandIn, boolean supporter,
-			boolean mineable, boolean climbable, boolean stairway) {
+			boolean mineable, boolean climbable, boolean stairway, boolean attachable) {
 		this.canStandIn = canStandIn;
 		this.supporter = supporter;
 		this.mineable = mineable;
 		this.climbable = climbable;
 		this.stairway = stairway;
+		this.attachable = attachable;
 	}
 	public boolean canStandIn() {
 		return canStandIn;
@@ -32,7 +35,9 @@ public class BlockBehavior {
 	public boolean isStairway() {
 		return stairway;
 	}
-	
+	public boolean isAttachable() {
+		return attachable;
+	}
 	
 	
 }
