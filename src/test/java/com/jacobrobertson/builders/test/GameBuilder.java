@@ -13,14 +13,14 @@ import com.jacobrobertson.builders.swing.SwingMapComponent;
 
 public class GameBuilder {
 
-	private SwingMapComponent comp = new SwingMapComponent();
+	private SwingMapComponent comp;
 	private BuilderMapImpl map = new BuilderMapImpl();
 	private Builder builder;
 	private List<Builder> builders;
 	private int msBetweenMoves;
 	
 	public GameBuilder(String mapName, String builderName, int msBetweenMoves) throws Exception {
-		comp.init();
+		comp = new SwingMapComponent("Builders - " + mapName + " - " + builderName);
 
 		builder = new Builder("simple-walker");
 		this.msBetweenMoves = msBetweenMoves;

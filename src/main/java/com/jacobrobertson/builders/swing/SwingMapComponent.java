@@ -19,8 +19,8 @@ public class SwingMapComponent extends JComponent implements MapDrawer {
 	private JFrame frame;
 	private BuilderMapImpl map;
 	
-	public void init() {
-		frame = new JFrame("Builders");
+	public SwingMapComponent(String title) {
+		frame = new JFrame(title);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(this);
 		frame.setBounds(100, 100, 1000, 500);
