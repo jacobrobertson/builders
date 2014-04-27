@@ -85,16 +85,21 @@ public class MoveMaker implements Moves {
 		return false;
 	}
 	private boolean mine(Move move, Builder builder) {
-		Point b = map.getBuilderPosition(builder);
-		Point m = getPoint(b, move.getDirection());
-		Block block = map.getBlock(m);
-		if (block != null && block.getBehavior().isMineable()) {
+		if (isMineLegal(move, builder)) {
+			Point b = map.getBuilderPosition(builder);
+			Point m = getPoint(b, move.getDirection());
+			Block block = map.getBlock(m);
 			map.removeBlock(m);
 			((BackpackImpl) builder.getBackpack()).add(block);
 			return true;
 		} else {
 			return false;
 		}
+	}
+	public boolean isMineLegal(Move move, Builder builder) {
+		Point b = map.getBuilderPosition(builder);
+		Point m = getPoint(b, move.getDirection());
+		return isMineable(m);
 	}
 	private boolean down(String builder) {
 		Point p = map.getBuilderPosition(builder);
@@ -108,12 +113,21 @@ public class MoveMaker implements Moves {
 		}
 	}
 	private boolean climb(String builder) {
+		if (isClimbLegal(builder)) {
+			Point p = map.getBuilderPosition(builder);
+			Point u = getPoint(p, Direction.Up);
+			map.setBuilderPosition(builder, u);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public boolean isClimbLegal(String builder) {
 		Point p = map.getBuilderPosition(builder);
 		Block b = map.getBlock(p);
 		if (b != null && b.getBehavior().isClimbable()) {
 			Point u = getPoint(p, Direction.Up);
 			if (isClimbable(u) || isEmpty(u)) {
-				map.setBuilderPosition(builder, u);
 				return true;
 			}
 		}
@@ -158,7 +172,6 @@ public class MoveMaker implements Moves {
 			map.setBuilderPosition(builder, u);
 			return true;
 		}
-		
 		
 		return false;
 	}
@@ -254,26 +267,38 @@ public class MoveMaker implements Moves {
 	private boolean place(Move move, Builder builder) {
 		Point b = map.getBuilderPosition(builder);
 		Point m = getPoint(b, move.getDirection());
-		if (!isPlaceable(m)) {
+		if (!isPlaceable(b, m)) {
 			return false;
 		}
 
 		Block remove = ((BackpackImpl) builder.getBackpack()).remove(move.getBlockType());
 		if (remove != null) {
-			map.setSimpleMapData(remove, m.x, m.y);
+			if (move.getDirection() == Direction.Down) {
+				// we've already confirmed this is okay
+				Point up = getPoint(b, Direction.Up);
+				map.setBuilderPosition(builder.getName(), up);
+				map.setSimpleMapData(remove, b.x, b.y);
+			} else {
+				map.setSimpleMapData(remove, m.x, m.y);
+			}
+			
 			return true;
 		}
 		
 		return false;
 	}
-	public boolean isPlaceable(Point m) {
-		if (!isEmpty(m)) {
+	public boolean isPlaceable(Point builder, Point blockPoint) {
+		if (isPlaceableUnder(builder, blockPoint)) {
+			return true;
+		}
+		
+		if (!isEmpty(blockPoint)) {
 			return false;
 		}
 
 		// see if there is at least one spot around the block that isn't empty, and is attachable
 		for (Direction d: Direction.values()) {
-			Point test = getPoint(m, d);
+			Point test = getPoint(blockPoint, d);
 			Block block = map.getBlock(test);
 			if (block != null && block.getBehavior().isAttachable()) {
 				return true;
@@ -281,6 +306,21 @@ public class MoveMaker implements Moves {
 		}
 		
 		return false;
+	}
+	/**
+	 * If builder is under an empty spot, and standing on an attachable block
+	 */
+	public boolean isPlaceableUnder(Point builder, Point block) {
+		Point over = getPoint(builder, Direction.Up);
+		if (!isEmpty(over)) {
+			return false;
+		}
+		Point under = getPoint(builder, Direction.Down);
+		Block b = map.getBlock(under);
+		if (b == null || !b.getBehavior().isAttachable()) {
+			return false;
+		}
+		return true;
 	}
 	public Point getPoint(Point p, Direction d) {
 		switch (d) {

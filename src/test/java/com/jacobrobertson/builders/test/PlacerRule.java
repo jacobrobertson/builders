@@ -37,7 +37,7 @@ public class PlacerRule implements Rule {
 		
 		for (Direction d: directions) {
 			Point m = moves.getPoint(b, d);
-			if (moves.isPlaceable(m)) {
+			if (moves.isPlaceable(b, m)) {
 				return Move.placeBlock(type, d);
 			}
 		}

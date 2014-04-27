@@ -14,6 +14,16 @@ public class BackpackImpl implements Backpack {
 	public void add(Block data) {
 		contents.add(data);
 	}
+	public int count(String blockType) {
+		int count = 0;
+		for (int i = 0; i < contents.size(); i++) {
+			Block one = contents.get(i);
+			if (blockType.equals(one.getType())) {
+				count++;
+			}
+		}
+		return count;
+	}
 	public Block remove(String blockType) {
 		for (int i = 0; i < contents.size(); i++) {
 			Block one = contents.get(i);
