@@ -22,7 +22,7 @@ public class BushBuilder extends Builder implements Rule {
 		builder.start();
 	}
 	
-	private static final int MAX_CHANGES = 3;
+	private static final int MAX_CHANGES = 2;
 	
 	private Direction currentDirection = Direction.Left;
 	private int directionChangesWithoutNewBushes = 0;
