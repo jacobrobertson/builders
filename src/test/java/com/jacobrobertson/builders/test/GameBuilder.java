@@ -20,9 +20,10 @@ public class GameBuilder {
 	private int msBetweenMoves;
 	
 	public GameBuilder(String mapName, String builderName, int msBetweenMoves) throws Exception {
-		comp = new SwingMapComponent("Builders - " + mapName + " - " + builderName);
-
-		builder = new Builder("simple-walker");
+		this(mapName, new Builder("simple-walker"), msBetweenMoves);
+	}
+	public GameBuilder(String mapName, Builder builder, int msBetweenMoves) throws Exception {
+		comp = new SwingMapComponent("Builders - " + mapName + " - " + builder.getName());
 		this.msBetweenMoves = msBetweenMoves;
 		
 		builders = new ArrayList<Builder>();

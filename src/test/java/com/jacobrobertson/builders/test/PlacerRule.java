@@ -2,11 +2,9 @@ package com.jacobrobertson.builders.test;
 
 import com.jacobrobertson.builders.Backpack;
 import com.jacobrobertson.builders.Block;
-import com.jacobrobertson.builders.BuilderMap;
 import com.jacobrobertson.builders.Move;
 import com.jacobrobertson.builders.Move.Direction;
 import com.jacobrobertson.builders.MoveContext;
-import com.jacobrobertson.builders.Moves;
 import com.jacobrobertson.builders.Point;
 import com.jacobrobertson.builders.Rule;
 
@@ -30,14 +28,11 @@ public class PlacerRule implements Rule {
 			return null;
 		}
 		
-		Moves moves = context.getMoves();
-		BuilderMap map = context.getMap(); 
-		
-		Point b = map.getBuilderPosition(context);
+		Point b = context.getBuilderPosition();
 		
 		for (Direction d: directions) {
-			Point m = moves.getPoint(b, d);
-			if (moves.isPlaceable(b, m)) {
+			Point m = context.getPoint(b, d);
+			if (context.isPlaceable(b, m)) {
 				return Move.placeBlock(type, d);
 			}
 		}

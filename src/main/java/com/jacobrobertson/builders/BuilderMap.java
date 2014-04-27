@@ -10,6 +10,7 @@ public interface BuilderMap {
 	MapData getMapData(Point p);
 	Block getBlock(Point p);
 	Point getBuilderPosition(String builderName);
+	Point getBuilderPosition(Builder builder);
 	Point getBuilderPosition(MoveContext context);
 	
 }
