@@ -2,12 +2,10 @@ package com.jacobrobertson.builders.test;
 
 import com.jacobrobertson.builders.Block;
 import com.jacobrobertson.builders.Blocks;
-import com.jacobrobertson.builders.Builder;
 import com.jacobrobertson.builders.Move;
 import com.jacobrobertson.builders.Move.Direction;
 import com.jacobrobertson.builders.MoveContext;
 import com.jacobrobertson.builders.Point;
-import com.jacobrobertson.builders.Rule;
 
 /**
  * Walks around looking for bushes to mine.
@@ -15,11 +13,10 @@ import com.jacobrobertson.builders.Rule;
  * 
  * @author Jacob
  */
-public class BushBuilder extends Builder implements Rule {
+public class BushBuilder extends GameBuildingBuilder {
 
 	public static void main(String[] args) throws Exception {
-		GameBuilder builder = new GameBuilder("map-plain.txt", new BushBuilder("Bush Builder"), 250);
-		builder.start();
+		new BushBuilder("map-plain.txt").start();
 	}
 	
 	private static final int MAX_CHANGES = 2;
@@ -29,9 +26,8 @@ public class BushBuilder extends Builder implements Rule {
 	private boolean foundBush = false;
 	private boolean buildingTower = false;
 	
-	public BushBuilder(String name) {
-		super(name);
-		addRule(this);
+	public BushBuilder(String mapName) {
+		super(mapName);
 	}
 	
 	public Move chooseNextMove(MoveContext context) {

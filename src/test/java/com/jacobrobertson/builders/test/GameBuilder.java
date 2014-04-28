@@ -1,5 +1,6 @@
 package com.jacobrobertson.builders.test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +16,13 @@ public class GameBuilder {
 
 	private SwingMapComponent comp;
 	private BuilderMapImpl map = new BuilderMapImpl();
-	private Builder builder;
 	private List<Builder> builders;
 	private int msBetweenMoves;
 	
-	public GameBuilder(String mapName, String builderName, int msBetweenMoves) throws Exception {
-		this(mapName, new Builder("simple-walker"), msBetweenMoves);
+	public GameBuilder(String mapName, String builderName, int msBetweenMoves) {
+		this(mapName, new Builder(builderName), msBetweenMoves);
 	}
-	public GameBuilder(String mapName, Builder builder, int msBetweenMoves) throws Exception {
+	public GameBuilder(String mapName, Builder builder, int msBetweenMoves) {
 		comp = new SwingMapComponent("Builders - " + mapName + " - " + builder.getName());
 		this.msBetweenMoves = msBetweenMoves;
 		
@@ -35,14 +35,28 @@ public class GameBuilder {
 		MoveMaker mover = new MoveMaker(map, comp, builders, msBetweenMoves);
 		mover.start();
 	}
-	private void addMap(String mapFile, BuilderMapImpl map, List<Builder> builders) throws Exception {
+	public void setMsBetweenMoves(int msBetweenMoves) {
+		this.msBetweenMoves = msBetweenMoves;
+	}
+	private void addMap(String mapFile, BuilderMapImpl map, List<Builder> builders) {
 		InputStream in = ClassLoader.getSystemResourceAsStream(mapFile);
-		FileMapParser parser = new FileMapParser(in);
-		parser.generate(map, builders);
+		FileMapParser parser;
+		try {
+			parser = new FileMapParser(in);
+			parser.generate(map, builders);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
+	/**
+	 * TODO deprecate this - won't work well if we have more than one builder
+	 * @param rule
+	 */
 	public void addRule(Rule rule) {
-		builder.addRule(rule);
+		for (Builder builder: builders) {
+			builder.addRule(rule);
+		}
 	}
 	
 }
