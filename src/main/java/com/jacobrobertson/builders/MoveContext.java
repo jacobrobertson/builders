@@ -46,8 +46,21 @@ public class MoveContext implements Moves, BuilderMap {
 	public boolean isMineable(Point p) {
 		return moveMaker.isMineable(p);
 	}
+	public boolean isMineable(Direction d) {
+		Point p = getPointFromBuilder(d);
+		return moveMaker.isMineable(p);
+	}
+	public boolean isWalkable(Direction d) {
+		Point p = getPointFromBuilder(d);
+		return moveMaker.isWalkable(p);
+	}
 	public boolean isMineLegal(Move move, Builder builder) {
 		return moveMaker.isMineLegal(move, builder);
+	}
+	public boolean isPlaceable(Direction d) {
+		Point b = getBuilderPosition();
+		Point p = getPointFromBuilder(d);
+		return moveMaker.isPlaceable(b, p);
 	}
 	public boolean isPlaceable(Point builder, Point block) {
 		return moveMaker.isPlaceable(builder, block);
@@ -91,5 +104,7 @@ public class MoveContext implements Moves, BuilderMap {
 	public Point getBuilderPosition(MoveContext context) {
 		return map.getBuilderPosition(context);
 	}
-	
+	public Backpack getBackpack() {
+		return builder.getBackpack();
+	}
 }

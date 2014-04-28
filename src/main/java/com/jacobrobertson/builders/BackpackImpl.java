@@ -24,6 +24,22 @@ public class BackpackImpl implements Backpack {
 		}
 		return count;
 	}
+	public boolean isEmpty() {
+		return contents.isEmpty();
+	}
+	public int size() {
+		return contents.size();
+	}
+	public String getFirstBlockType() {
+		if (contents.isEmpty()) {
+			return null;
+		} else {
+			return contents.get(0).getType();
+		}
+	}
+	public boolean contains(String blockType) {
+		return count(blockType) > 0;
+	}
 	public Block remove(String blockType) {
 		for (int i = 0; i < contents.size(); i++) {
 			Block one = contents.get(i);

@@ -29,4 +29,7 @@ public class Builder {
 	public void addRule(Rule rule) {
 		rules.add(rule);
 	}
+	protected void setName(String name) {
+		this.name = name;
+	}
 }
